@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="three.js-master/build/three.js"></script>
+    <script src="three.js-master/examples/js/controls/OrbitControls.js"></script>
+    <script src="three.js-master/examples/js/libs/dat.gui.min.js"></script>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <script type="text/javascript">
+        var W = window.innerWidth, H = window.innerHeight;
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(W, H);
+        var scene = new THREE.Scene();
+        scene.add(new THREE.AxisHelper(100));
+
+        var planGeometry = new THREE.PlaneGeometry(10, 10, 10, 10);
+        var planMaterial = new THREE.MeshBasicMaterial({
+            color: 'yellow',
+            wireframe: true
+        });
+
+        var plan = new THREE.Mesh(planGeometry, planMaterial);
+        plan.position.set(10, 0, 10);
+        plan.rotateX(-Math.PI / 2);
+        scene.add(plan);
+
+        var smileyShape = new THREE.Shape();
+        smileyShape.moveTo(80, 40);
+        smileyShape.absarc(40, 40, 40, 0, Math.PI * 2, false);
+
+        var gura = new THREE.Path();
+        gura.absellipse(40, 50, 20, 10, 0, Math.PI * 2, true);
+        smileyShape.holes.push(gura);
+
+        var smileyGeometry = new THREE.ExtrudeGeometry(smileyShape, {
+                amount:2,
+                bevelThickness:1,
+                bevelSize:1,
+                bevelSegments:3,
+                bevelEnabled:true,
+                steps:1
+        });
+
+        smileyGeometry.scale(0.1, 0.1, 0.1);
+        var smiley = new THREE.Mesh(
+            smileyGeometry,
+            new THREE.MeshBasicMaterial({
+                color: 'red',
+                wireframe: true
+            }));
+        
+        
+        smiley.rotateZ(Math.PI);
+        smiley.position.set(13, 8, 8);
+        scene.add(smiley);
+
+        var camera = new THREE.PerspectiveCamera(45, W / H, 0.01, 5000);
+        camera.position.set(100, 100, 100);
+        camera.lookAt(scene.position);
+        new THREE.OrbitControls(camera);
+        document.body.appendChild(renderer.domElement);
+
+        function render() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>
